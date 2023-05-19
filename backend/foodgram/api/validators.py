@@ -5,6 +5,8 @@ from django.core.exceptions import ValidationError
 
 
 def validate_username(value):
+    '''Валидатор username'''
+
     if value.lower() == 'me':
         raise ValidationError(
             ('Имя пользователя не может быть <me>.'),
@@ -16,6 +18,8 @@ def validate_username(value):
 
 
 def validate_year(value):
+    '''Валидатор date'''
+    
     year = dt.date.today().year
     if not (value <= year):
         raise ValidationError('Дата указана некорректно!')
