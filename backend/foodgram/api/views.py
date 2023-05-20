@@ -1,10 +1,9 @@
 from django.shortcuts import get_object_or_404
 # from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from recipes.models import Ingredient, Recipe, Tag
-from rest_framework import permissions, status, viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated, SAFE_METHODS
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 
 from api.filters import NameSearchFilter
@@ -13,6 +12,7 @@ from api.permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 from api.serializers import (FollowSerializer, IngredientSerializer,
                              MeUserSerializer, RecipeCreateSerializer,
                              RecipeReadSerializer, TagSerializer)
+from recipes.models import Ingredient, Recipe, Tag
 from users.models import Follow, User
 
 
@@ -89,8 +89,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     '''Вюсет рецептов'''
 
     queryset = Recipe.objects.all()
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthorOrReadOnly,)
     pagination_class = CustumPagination
+    http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_serializer_class(self):
         if self.request.method in SAFE_METHODS:
@@ -100,3 +101,5 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
+    def perform_update(self, serializer):
+        serializer.save(author=self.request.user)

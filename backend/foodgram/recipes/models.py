@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
 
@@ -21,7 +22,6 @@ class Tag(models.Model):
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
-        ordering = ['pk']
 
     def __str__(self):
         return self.name
@@ -38,7 +38,7 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = 'Ингридиент'
         verbose_name_plural = 'Ингридиенты'
-        ordering = ['pk']
+        ordering = ['pk',]
 
     def __str__(self):
         return self.name
@@ -73,10 +73,10 @@ class Recipe(models.Model):
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
-        ordering = ['-date']
+        ordering = ('-date',)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class RecipeIngredients(models.Model):
@@ -90,14 +90,15 @@ class RecipeIngredients(models.Model):
                                    verbose_name='Ингридиент',
                                    on_delete=models.CASCADE,
                                    related_name='recipeingredients')
-    amount = models.PositiveSmallIntegerField(verbose_name='Колличество')
+    amount = models.PositiveSmallIntegerField(verbose_name='Колличество',
+                                              validators=(MinValueValidator(1),))
 
     class Meta:
         verbose_name = 'ингридиент для рецепта'
         verbose_name_plural = 'ингридиенты для рецепта'
 
     def __str__(self):
-        return self.recipe
+        return f'{str(self.ingredient)} in {str(self.recipe)}-{self.amount}'
 
 
 class Favourite(models.Model):
