@@ -1,9 +1,8 @@
-from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import IntegerField, SerializerMethodField
+from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
 
 from recipes.models import (Favourite, Ingredient, Recipe, RecipeIngredients,
@@ -31,8 +30,8 @@ class MeUserSerializer(UserSerializer):
 class FollowSerializer(MeUserSerializer):
     '''Сериализатор подписoк.'''
 
-    recipes_count = serializers.IntegerField(source='recipes.count',    
-                                             read_only = True)
+    recipes_count = serializers.IntegerField(source='recipes.count',
+                                             read_only=True)
     recipes = SerializerMethodField(method_name='get_recipes')
     is_subscribed = serializers.BooleanField(default=True)
 
@@ -80,12 +79,19 @@ class RecipeShortSerializer(ModelSerializer):
 class IngredientInRecipeCreateSerializer(ModelSerializer):
     '''Сериализатор для отоброжения ингридиента при создание рецепта'''
 
-    amount = IntegerField()
     id = PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
+    name = serializers.ReadOnlyField(source='ingredient.name')
+    measurement_unit = serializers.ReadOnlyField(
+        source='ingredient.measurement_unit')
 
     class Meta:
         model = RecipeIngredients
-        fields = ('id', 'amount')
+        fields = ('id', 'amount', 'name', 'measurement_unit')
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['id'] = instance.ingredient.id
+        return data
 
 
 class RecipeReadSerializer(ModelSerializer):
@@ -93,7 +99,8 @@ class RecipeReadSerializer(ModelSerializer):
 
     tags = TagSerializer(many=True, read_only=True)
     author = MeUserSerializer(read_only=True)
-    ingredients = IngredientSerializer(many=True)
+    ingredients = IngredientInRecipeCreateSerializer(
+        source='recipeingredients', many=True)
     image = Base64ImageField()
     is_favorited = SerializerMethodField(read_only=True)
     is_in_shopping_cart = SerializerMethodField(read_only=True)
@@ -143,7 +150,7 @@ class RecipeCreateSerializer(ModelSerializer):
             if i['amount'] <= 0:
                 raise ValidationError('Колличество должго быть больше 0')
         return value
-    
+
     def to_representation(self, instance):
         request = self.context.get('request')
         context = {'request': request}

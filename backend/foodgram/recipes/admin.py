@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from recipes.models import (Favourite, Ingredient, Recipe, RecipeIngredients,
                             ShoppingCart, Tag)
 
@@ -23,6 +24,10 @@ class RecipeAdmin(admin.ModelAdmin):
                     'cooking_time', 'image', 'date')
     search_fields = ('name', 'author', 'text', 'cooking_time')
     list_filter = ('name', 'author', 'tags')
+    readonly_fields = ('favarite_count',)
+
+    def favarite_count(self, obj):
+        return obj.favorites.count()
 
 
 @admin.register(RecipeIngredients)

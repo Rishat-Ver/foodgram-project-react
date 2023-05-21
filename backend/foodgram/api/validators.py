@@ -19,7 +19,7 @@ def validate_username(value):
 
 def validate_year(value):
     '''Валидатор date'''
-    
+
     year = dt.date.today().year
     if not (value <= year):
         raise ValidationError('Дата указана некорректно!')

@@ -38,7 +38,7 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = 'Ингридиент'
         verbose_name_plural = 'Ингридиенты'
-        ordering = ['pk',]
+        ordering = ['pk']
 
     def __str__(self):
         return self.name
@@ -90,8 +90,8 @@ class RecipeIngredients(models.Model):
                                    verbose_name='Ингридиент',
                                    on_delete=models.CASCADE,
                                    related_name='recipeingredients')
-    amount = models.PositiveSmallIntegerField(verbose_name='Колличество',
-                                              validators=(MinValueValidator(1),))
+    amount = models.PositiveSmallIntegerField(
+        verbose_name='Колличество', validators=(MinValueValidator(1),))
 
     class Meta:
         verbose_name = 'ингридиент для рецепта'
