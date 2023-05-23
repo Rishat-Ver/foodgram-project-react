@@ -12,10 +12,6 @@ def validate_username(value):
             ('Имя пользователя не может быть <me>.'),
             params={'value': value},
         )
-    if re.search(r'^[-a-zA-Z0-9_]+$', value) is None:
-        raise ValidationError(
-            ('Не допустимые символы '), params={'value': value},)
-
 
 def validate_year(value):
     '''Валидатор date'''

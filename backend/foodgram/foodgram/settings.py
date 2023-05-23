@@ -119,7 +119,9 @@ DJOSER = {
     'PERMISSIONS': {
         'user': ['rest_framework.permissions.AllowAny'],
         'user_list': ['rest_framework.permissions.AllowAny'],
-        "user_delete": ["rest_framework.permissions.IsAdminUser"],
-        "set_username": ["rest_framework.permissions.IsAdminUser"],
+        'user_delete': ['rest_framework.permissions.IsAdminUser'],
+        'set_username': ['rest_framework.permissions.IsAdminUser'],
     },
 }
+
+EMPTY_VALUE_DISPLAY = '-пусто-'

@@ -38,7 +38,7 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = 'Ингридиент'
         verbose_name_plural = 'Ингридиенты'
-        ordering = ['pk']
+        ordering = ('pk',)
 
     def __str__(self):
         return self.name
@@ -116,10 +116,10 @@ class Favourite(models.Model):
     class Meta:
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранные'
-        constraints = [
-            UniqueConstraint(fields=['user', 'recipe'],
-                             name='unique_favourite')
-        ]
+        constraints = (
+            UniqueConstraint(fields=('user', 'recipe'),
+                             name='unique_favourite'),
+        )
 
     def __str__(self):
         return f'Добавленно в избранное {self.recipe}'
@@ -140,10 +140,10 @@ class ShoppingCart(models.Model):
     class Meta:
         verbose_name = 'Покупка'
         verbose_name_plural = 'Список Покупок'
-        constraints = [
-            UniqueConstraint(fields=['user', 'recipe'],
-                             name='unique_shopping_cart')
-        ]
+        constraints = (
+            UniqueConstraint(fields=('user', 'recipe'),
+                             name='unique_shopping_cart'),
+        )
 
     def __str__(self):
         return f'Добавил в корзину {self.recipe}'

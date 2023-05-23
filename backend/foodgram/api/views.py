@@ -1,5 +1,3 @@
-from django.db.models.aggregates import Sum
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
@@ -15,6 +13,7 @@ from api.serializers import (FollowSerializer, IngredientSerializer,
                              MeUserSerializer, RecipeCreateSerializer,
                              RecipeReadSerializer, RecipeShortSerializer,
                              TagSerializer)
+from api.utils import download_shopping_cart
 from recipes.models import (Favourite, Ingredient, Recipe, RecipeIngredients,
                             ShoppingCart, Tag)
 from users.models import Follow, User
@@ -48,14 +47,14 @@ class MeUserViewSet(UserViewSet):
 
         if request.method == 'POST':
             if user.id == author.id:
-                return Response({"detail": 'Нельзя подписаться на себя'},
+                return Response({'detail': 'Нельзя подписаться на себя'},
                                 status=status.HTTP_400_BAD_REQUEST)
             if Follow.objects.filter(author=author, user=user).exists():
-                return Response({"detail": 'Вы уже подписаны!'},
+                return Response({'detail': 'Вы уже подписаны!'},
                                 status=status.HTTP_400_BAD_REQUEST)
             Follow.objects.create(user=user, author=author)
             serializer = FollowSerializer(author,
-                                          context={"request": request})
+                                          context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if request.method == 'DELETE':
@@ -86,7 +85,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = IngredientSerializer
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (NameSearchFilter,)
-    search_fields = ("^name",)
+    search_fields = ('^name',)
     pagination_class = None
 
 
@@ -98,7 +97,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     pagination_class = CustumPagination
     filter_backends = (DjangoFilterBackend, )
     filterset_class = RecipeFilter
-    http_method_names = ['get', 'post', 'patch', 'delete']
+    http_method_names = [
+        m for m in viewsets.ModelViewSet.http_method_names if m not in ['put']
+    ]
 
     def get_serializer_class(self):
         if self.request.method in SAFE_METHODS:
@@ -120,7 +121,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if self.request.method == 'POST':
             if Favourite.objects.filter(user=user, recipe=recipe).exists():
-                return Response({"errors": 'Рецепт уже в избранном'},
+                return Response({'errors': 'Рецепт уже в избранном'},
                                 status=status.HTTP_400_BAD_REQUEST)
             Favourite.objects.create(user=user, recipe=recipe)
             serializer = RecipeShortSerializer(
@@ -145,7 +146,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if self.request.method == 'POST':
             if ShoppingCart.objects.filter(user=user, recipe=recipe).exists():
-                return Response({"errors": 'Уже в списке'},
+                return Response({'errors': 'Уже в списке'},
                                 status=status.HTTP_400_BAD_REQUEST)
             ShoppingCart.objects.create(user=user, recipe=recipe)
             serializer = RecipeShortSerializer(
@@ -155,7 +156,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if self.request.method == 'DELETE':
             if not ShoppingCart.objects.filter(user=user,
                                                recipe=recipe).exists():
-                return Response({"errors": 'Рецепта нет в списке покупок'},
+                return Response({'errors': 'Рецепта нет в списке покупок'},
                                 status=status.HTTP_400_BAD_REQUEST)
             shopping_cart = get_object_or_404(
                 ShoppingCart, user=user, recipe=recipe)
@@ -167,16 +168,4 @@ class RecipeViewSet(viewsets.ModelViewSet):
             methods=['get'],
             permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
-        ingredients = RecipeIngredients.objects.filter(
-            recipe__shopping__user=request.user).values(
-                'ingredient__name', 'ingredient__measurement_unit').annotate(
-                    amount=Sum('amount'))
-        text = ''
-        for ingredient in ingredients:
-            text += (f'•  {ingredient["ingredient__name"]}'
-                     f'({ingredient["ingredient__measurement_unit"]})'
-                     f'— {ingredient["amount"]}\n')
-        headers = {
-            'Content-Disposition': 'attchment; filename=shoping_cart.txt'}
-        return HttpResponse(
-            text, content_type='text/plain; charset=UTF-8', headers=headers)
+        return download_shopping_cart(self, request)

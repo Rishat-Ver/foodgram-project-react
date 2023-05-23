@@ -1,8 +1,7 @@
+from api.validators import validate_username
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import UniqueConstraint
-
-from api.validators import validate_username
 
 
 class User(AbstractUser):
@@ -27,11 +26,11 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-        ordering = ['pk']
-        constraints = [
-            models.UniqueConstraint(fields=['email', 'username'],
-                                    name='unique_auth')
-        ]
+        ordering = ('pk',)
+        constraints = (
+            models.UniqueConstraint(fields=('email', 'username'),
+                                    name='unique_auth'),
+        )
 
     def __str__(self):
         return self.username
@@ -52,11 +51,11 @@ class Follow(models.Model):
     class Meta:
         verbose_name = 'Подписчик'
         verbose_name_plural = 'Подписчики'
-        ordering = ['-pk']
-        constraints = [
-            UniqueConstraint(fields=['user', 'author'],
-                             name='unique_subscription')
-        ]
+        ordering = ('-pk',)
+        constraints = (
+            UniqueConstraint(fields=('user', 'author'),
+                             name='unique_subscription'),
+        )
 
     def __str__(self):
         return self.user
