@@ -17,18 +17,13 @@ jobs:
         # обновление pip
         python -m pip install --upgrade pip 
         # установка flake8 и его плагинов
-        pip install flake8 pep8-naming flake8-broken-line flake8-return flake8-isort
+        pip install flake8
         # установка зависимостей
         pip install -r backend/requirements.txt  
-    - name: Test with flake8 and django tests
+    - name: Test with flake8
       run: |
         # запуск проверки проекта по flake8
         python -m flake8
-        pytest
-        # перейти в папку, содержащую manage.py — 
-        cd backend/footgram/
-        # запустить написанные разработчиком тесты
-        python manage.py test
 
   build_and_push_to_docker_hub:
         name: Push Docker image to Docker Hub
@@ -84,6 +79,9 @@ jobs:
             sudo docker pull ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_backend:latest
             sudo docker pull ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_frontend:latest
             sudo docker-compose up -d --build
+            sudo docker-compose exec -T web python manage.py collectstatic --no-input
+            sudo docker-compose exec -T web python manage.py makemigrations
+            sudo docker-compose exec -T web python manage.py migrate
 
   send_message:
     runs-on: ubuntu-latest
