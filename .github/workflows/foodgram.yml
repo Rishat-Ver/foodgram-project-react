@@ -3,6 +3,33 @@ name: foodgram workflow
 on: [push]
 
 jobs:
+
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: | 
+        # обновление pip
+        python -m pip install --upgrade pip 
+        # установка flake8 и его плагинов
+        pip install flake8 pep8-naming flake8-broken-line flake8-return flake8-isort
+        # установка зависимостей
+        pip install -r backend/requirements.txt  
+    - name: Test with flake8 and django tests
+      run: |
+        # запуск проверки проекта по flake8
+        python -m flake8
+        pytest
+        # перейти в папку, содержащую manage.py — 
+        cd backend/footgram/
+        # запустить написанные разработчиком тесты
+        python manage.py test
+
   build_and_push_to_docker_hub:
         name: Push Docker image to Docker Hub
         runs-on: ubuntu-latest
@@ -57,3 +84,14 @@ jobs:
             sudo docker pull ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_backend:latest
             sudo docker pull ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_frontend:latest
             sudo docker-compose up -d --build
+
+  send_message:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+    - name: send message
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: ${{ github.workflow }} успешно выполнен!

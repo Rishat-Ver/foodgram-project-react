@@ -2,7 +2,9 @@
 ![example workflow] Надо добавить!
 
 ### **Адрес проекта**
-Надо добавить!
+http://84.252.143.251/admin/
+http://84.252.143.251/api/docs/
+
 
 ---
 
@@ -38,7 +40,17 @@ Yandex cloud
 - Вконтакте: https://vk.com/id356120934
 
 ---
-
+### **Команды докера**
+```
+docker-compose up --build
+docker-compose down -v
+docker images
+docker ps
+docker exec -it f5f5ed69e732 bash
+docker build -t rishat1991/foodgram_frontend .
+docker push rishat1991/foodgram_frontend
+```
+---
 ### **Запуск проекта локально в контейнерах:**
 ```
 git clone git@github.com:Rishat-Ver/foodgram-project-react.git # клонируем проект
@@ -67,7 +79,26 @@ python manage.py collectstatic # Собираем статику в контей
 ---
 
 ### **Запуск проекта на сервере в контейнерах:**
-
+```
+# МЕНЯЕМ БАЗУ SQLITE НА POSTGRES
+pip install python-dotenv
+# ИЗМЕНЯЕМ НАСТРОЙКИ БД В settings.pe
+docker build -t rishat1991/foodgram_frontend . # Собрали образ foodgram_frontend
+docker build -t rishat1991/foodgram_backend . # Собрали образ foodgram_backend
+docker push rishat1991/foodgram_frontend # Запушили DockerHub
+docker push rishat1991/foodgram_backend # Запушили DockerHub
+ssh rishat@84.252.143.251 # Заходим на ВМ
+mkdir Dev # Создаем директорию Dev
+cd Dev/ # Переходим Dev
+mkdir footgram # Создаем директорию footgram
+scp -r infra rishat@84.252.143.251:/home/rishat/Dev/foodgram # Копируем infra/ на сервер
+scp -r docs rishat@84.252.143.251:/home/rishat/Dev/foodgram # Копируем docs/ на сервер
+# ПИШЕМ foodgram.yml
+sudo systemctl stop nginx
+git add .
+git commit -m""
+git push
+```
 
 ---
 
