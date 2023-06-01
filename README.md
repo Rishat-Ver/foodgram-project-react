@@ -1,5 +1,6 @@
 # Проект **Foodgram - "Продуктовый помощник"**
-![example workflow] Надо добавить!
+![example workflow](https://github.com/Rishat-Ver/foodgram-project-react/actions/workflows/footgram.yml/badge.svg)
+![Бургер](https://github.com/Rishat-Ver/foodgram-project-react/assets/113997223/7832368d-1e73-48ec-9194-07817b34f52a)
 
 ### **Адрес проекта**
 http://84.252.143.251/admin/  Админка<br>
