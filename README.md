@@ -169,3 +169,4 @@ USER
 https://github.com/Rishat-Ver <br>
 Он сделан в рамках обучения на курсе Python-рфзроботчик Яндекс-Практикума <br>
 Backend разработкой, настройкой сервера , докера и т п работал Ришат Вергасов <br>
+![2021-12-10 20-14-18](https://github.com/Rishat-Ver/foodgram-project-react/assets/113997223/8d98b2d1-a33b-4f20-823f-7656ae0dd5ac)
