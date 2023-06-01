@@ -1,6 +1,9 @@
 # Проект **Foodgram - "Продуктовый помощник"**
-![example workflow] Надо добавить!
 
+![example workflow](https://github.com/Rishat-Ver/foodgram-project-react/actions/workflows/footgram.yml/badge.svg)
+---
+
+---
 ### **Адрес проекта**
 http://84.252.143.251/admin/  Админка<br>
 http://84.252.143.251/api/docs/ Документация<br>
