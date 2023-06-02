@@ -18,6 +18,12 @@ class IngredientAdmin(admin.ModelAdmin):
     list_filter = ('name', 'measurement_unit')
 
 
+class RecipeIngredientsInLine(admin.TabularInline):
+    model = Recipe.ingredients.through
+    extra = 1
+    min_num = 1
+
+
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'author', 'text',
@@ -25,6 +31,7 @@ class RecipeAdmin(admin.ModelAdmin):
     search_fields = ('name', 'author', 'text', 'cooking_time')
     list_filter = ('name', 'author', 'tags')
     readonly_fields = ('favarite_count',)
+    inlines = (RecipeIngredientsInLine,)
 
     def favarite_count(self, obj):
         return obj.favorites.count()

@@ -1,8 +1,9 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
+from django.core.exceptions import ValidationError
 
-from api.validators import validate_year
+from api.validators import validate_year, validate_ingredients
 from users.models import User
 
 
@@ -59,13 +60,16 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(Ingredient,
                                          verbose_name='Ингридиенты',
                                          through='RecipeIngredients',
-                                         related_name='recipes')
+                                         related_name='recipes',
+                                         validators=(validate_ingredients,))
 
     tags = models.ManyToManyField(Tag,
                                   verbose_name='Тег',
-                                  related_name='recipes')
+                                  related_name='recipes',
+                                  blank=False)
     cooking_time = models.PositiveSmallIntegerField(
-        verbose_name='Время приготовления')
+        verbose_name='Время приготовления',
+        validators=[MinValueValidator(1, message='Минимальное значение 1!')])
     date = models.DateTimeField(verbose_name='Дата публикации',
                                 validators=(validate_year,),
                                 auto_now_add=True)
