@@ -62,6 +62,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd Dev/foodgram/infra
+            sudo rm -f .env
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env

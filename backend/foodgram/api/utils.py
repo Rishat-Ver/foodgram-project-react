@@ -28,12 +28,11 @@ def download_shopping_cart(self, request):
             80, height, f"{i}. {name} – {data['amount']} {data['unit']}"
         )
         height -= 25
-    page.showPage()
-    page.save()
-    buffer.seek(0)
     response = FileResponse(buffer, content_type='application/pdf')
     response['Content-Disposition'] = ('attachment; '
                                        'filename="shopping_list.pdf"')
+    page.showPage()
+    page.save()
     return response
 
 
