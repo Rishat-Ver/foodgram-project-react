@@ -21,6 +21,9 @@ def download_cart(self, request):
     buffer = BytesIO()
 
     page = canvas.Canvas(buffer)
+    response = FileResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = ('attachment; '
+                                       'filename="shopping_list.pdf"')
 
     page.drawString(100, 750, "Список покупок")
     for i, (name, data) in enumerate(cart_list.items(), start=1):
@@ -28,9 +31,6 @@ def download_cart(self, request):
             80, height, f"{i}. {name} – {data['amount']} {data['unit']}"
         )
         height -= 25
-    response = FileResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = ('attachment; '
-                                       'filename="shopping_list.pdf"')
     page.showPage()
     page.save()
     return response
