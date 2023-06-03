@@ -1,8 +1,7 @@
 from django.db.models.aggregates import Sum
-from django.http import HttpResponse
+from django.http import FileResponse
 from reportlab.pdfgen import canvas
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
+from io import BytesIO
 
 from api.serializers import RecipeIngredients
 
@@ -24,10 +23,6 @@ from api.serializers import RecipeIngredients
 
 
 def download_shopping_cart(self, request):
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = ('attachment; '
-                                        'filename="shopping_list.pdf"')
-    page = canvas.Canvas(response)
     ingredients = RecipeIngredients.objects.filter(
         recipe__cart__user=request.user).values_list(
         'ingredient__name', 'ingredient__measurement_unit',
@@ -39,6 +34,9 @@ def download_shopping_cart(self, request):
         else:
             cart_list[name]["amount"] += amount
     height = 700
+    buffer = BytesIO()
+
+    page = canvas.Canvas(buffer)
 
     page.drawString(100, 750, "Список покупок")
     for i, (name, data) in enumerate(cart_list.items(), start=1):
@@ -48,4 +46,8 @@ def download_shopping_cart(self, request):
         height -= 25
     page.showPage()
     page.save()
+    buffer.seek(0)
+    response = FileResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = ('attachment; '
+                                       'filename="shopping_list.pdf"')
     return response
