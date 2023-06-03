@@ -13,7 +13,7 @@ from api.serializers import (FollowSerializer, IngredientSerializer,
                              MeUserSerializer, RecipeCreateSerializer,
                              RecipeReadSerializer, RecipeShortSerializer,
                              TagSerializer)
-from api.utils import download_shopping_cart
+from api.utils import download_cart
 from recipes.models import (Favourite, Ingredient, Recipe, RecipeIngredients,
                             ShoppingCart, Tag)
 from users.models import Follow, User
@@ -168,4 +168,4 @@ class RecipeViewSet(viewsets.ModelViewSet):
             methods=['get'],
             permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
-        return download_shopping_cart(self, request)
+        return download_cart(self, request)

@@ -6,7 +6,7 @@ from io import BytesIO
 from api.serializers import RecipeIngredients
 
 
-def download_shopping_cart(self, request):
+def download_cart(self, request):
     ingredients = RecipeIngredients.objects.filter(
         recipe__cart__user=request.user).values_list(
         'ingredient__name', 'ingredient__measurement_unit',
@@ -36,7 +36,7 @@ def download_shopping_cart(self, request):
     return response
 
 
-    """ def download_shopping_cart(self, request):
+    """ def download_cart(self, request):
     ingredients = RecipeIngredients.objects.filter(
         recipe__shopping__user=request.user).values(
             'ingredient__name', 'ingredient__measurement_unit').annotate(
