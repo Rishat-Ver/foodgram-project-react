@@ -64,11 +64,11 @@ jobs:
             cd Dev/foodgram/infra
             sudo docker-compose stop
             sudo docker-compose rm backend
-            sudo docker image rm ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_backend:latest
-            sudo docker image rm ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_frontend:latest
+            sudo docker-compose image rm ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_backend:latest
+            sudo docker-compose image rm ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_frontend:latest
             rm -f .env
-            sudo docker pull ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_backend:latest
-            sudo docker pull ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_frontend:latest
+            sudo docker-compose pull ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_backend:latest
+            sudo docker-compose pull ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_frontend:latest
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
