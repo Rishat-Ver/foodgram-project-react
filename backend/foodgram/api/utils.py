@@ -1,12 +1,12 @@
 from django.db.models.aggregates import Sum
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 from reportlab.pdfgen import canvas
 from io import BytesIO
 
 from api.serializers import RecipeIngredients
 
 
-def download_cart(self, request):
+""" def download_cart(self, request):
     ingredients = RecipeIngredients.objects.filter(
         recipe__cart__user=request.user).values_list(
         'ingredient__name', 'ingredient__measurement_unit',
@@ -34,10 +34,10 @@ def download_cart(self, request):
     response = FileResponse(buffer, content_type='application/pdf')
     response['Content-Disposition'] = ('attachment; '
                                        'filename="shopping_list.pdf"')
-    return response
+    return response """
 
 
-    """ def download_cart(self, request):
+def download_cart(self, request):
     ingredients = RecipeIngredients.objects.filter(
         recipe__shopping__user=request.user).values(
             'ingredient__name', 'ingredient__measurement_unit').annotate(
@@ -50,4 +50,4 @@ def download_cart(self, request):
     headers = {
         'Content-Disposition': 'attchment; filename=shoping_cart.txt'}
     return HttpResponse(
-        text, content_type='text/plain; charset=UTF-8', headers=headers) """
+        text, content_type='text/plain; charset=UTF-8', headers=headers)
