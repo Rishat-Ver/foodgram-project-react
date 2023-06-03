@@ -62,6 +62,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd Dev/foodgram/infra
+            sudo docker-compose stop
+            sudo docker-compose rm backend
             sudo docker rm ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_backend:latest
             sudo docker rm ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_frontend:latest
             sudo rm -f .env
@@ -73,8 +75,6 @@ jobs:
             echo DB_HOST=${{ secrets.DB_HOST }} >> .env
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             echo SECKET_KEY=${{ secrets.SECKET_KEY }} >> .env
-            sudo docker-compose stop
-            sudo docker-compose rm backend
             sudo docker pull ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_backend:latest
             sudo docker pull ${{ secrets.DOCKERHUB_LOGIN }}/foodgram_frontend:latest
             sudo docker-compose up -d
