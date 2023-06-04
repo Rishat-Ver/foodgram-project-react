@@ -168,4 +168,4 @@ class RecipeViewSet(viewsets.ModelViewSet):
             methods=['get'],
             permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
-        return download_cart(self, request)
+        return download_cart(request)
