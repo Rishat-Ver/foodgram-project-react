@@ -114,7 +114,7 @@ docker push rishat1991/foodgram_backend # Запушили DockerHub
 ssh rishat@84.252.143.251 # Заходим на ВМ
 mkdir Dev # Создаем директорию Dev
 cd Dev/ # Переходим Dev
-mkdir footgram # Создаем директорию footgram
+mkdir footgram # Создаем директорию  footgram
 scp -r infra rishat@84.252.143.251:/home/rishat/Dev/foodgram # Копируем infra/ на сервер
 scp -r docs rishat@84.252.143.251:/home/rishat/Dev/foodgram # Копируем docs/ на сервер
 # ПИШЕМ foodgram.yml
