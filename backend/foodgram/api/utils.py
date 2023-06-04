@@ -10,7 +10,7 @@ from api.serializers import RecipeIngredients
 
 def download_cart(request):
     ingredients = RecipeIngredients.objects.filter(
-        recipe__cart__user=request.user).values_list(
+        recipe__shopping__user=request.user).values_list(
         'ingredient__name', 'ingredient__measurement_unit',
         'amount')
     cart_list = {}
@@ -19,8 +19,7 @@ def download_cart(request):
         if name not in cart_list:
             cart_list[name] = {
                 'measurement_unit': item[1],
-                'amount': item[2]
-            }
+                'amount': item[2]}
         else:
             cart_list[name]['amount'] += item[2]
     height = 700
