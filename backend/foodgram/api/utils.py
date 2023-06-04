@@ -15,14 +15,14 @@ def download_cart(request):
         'amount')
     cart_list = {}
     for item in ingredients:
-            name = item[0]
-            if name not in cart_list:
-                cart_list[name] = {
-                    'measurement_unit': item[1],
-                    'amount': item[2]
-                }
-            else:
-                cart_list[name]['amount'] += item[2]
+        name = item[0]
+        if name not in cart_list:
+            cart_list[name] = {
+                'measurement_unit': item[1],
+                'amount': item[2]
+            }
+        else:
+            cart_list[name]['amount'] += item[2]
     height = 700
     buffer = BytesIO()
     pdfmetrics.registerFont(TTFont('DejaVuSerif', 'DejaVuSerif.ttf'))
