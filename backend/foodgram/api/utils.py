@@ -26,7 +26,7 @@ def download_cart(request):
     buffer = BytesIO()
     pdfmetrics.registerFont(TTFont('arial', 'static/arial.ttf'))
     page = canvas.Canvas(buffer)
-    page.setFont('DejaVuSerif', 13)
+    page.setFont('arial', 13)
     page.drawString(100, 750, "Список покупок")
     for i, (name, data) in enumerate(cart_list.items(), start=1):
         page.drawString(
