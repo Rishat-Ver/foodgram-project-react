@@ -30,7 +30,7 @@ def download_cart(request):
     page.drawString(100, 750, "Список покупок")
     for i, (name, data) in enumerate(cart_list.items(), start=1):
         page.drawString(
-            80, height, f"{i}. {name} – {data['amount']} {data['unit']}"
+            80, height, f"{i}. {name} – {data['amount']} {data['measurement_unit']}"
         )
         height -= 25
     page.showPage()
