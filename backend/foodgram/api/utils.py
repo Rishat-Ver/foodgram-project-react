@@ -10,9 +10,9 @@ from api.serializers import RecipeIngredients
 
 def download_cart(request):
     ingredients = RecipeIngredients.objects.filter(
-        recipe__shopping__user=request.user).values(
-            'ingredient__name', 'ingredient__measurement_unit').annotate(
-            amount=Sum('amount'))
+        recipe__shopping__user=request.user).values_list(
+        'ingredient__name', 'ingredient__measurement_unit',
+        'amount')
     cart_list = {}
     for item in ingredients:
         name = item[0]
